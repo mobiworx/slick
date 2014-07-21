@@ -2,6 +2,10 @@ package com.typesafe.slick.testkit.tests
 
 import org.junit.Assert._
 import com.typesafe.slick.testkit.util.{RelationalTestDB, TestkitTest}
+import org.junit.runner.RunWith
+import com.typesafe.slick.testkit.util.Testkit
+import org.junit.Test
+
 
 class AggregateTest extends TestkitTest[RelationalTestDB] {
   import tdb.profile.simple._
@@ -183,6 +187,7 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
     assertEquals(2, res11.size)
   }
 
+  
   def testIntLength {
     class A(tag: Tag) extends Table[Int](tag, "A_testIntLength") {
       def id = column[Int]("ID")
@@ -228,6 +233,12 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
       case (grp, t) => (grp._1._1, grp._1._2, t.map(_.col4).sum)
     }
     assertEquals(Set(("baz","quux",Some(4)), ("foo","quux",Some(3)), ("foo","bar",Some(3))), q2.run.toSet)
+     
+    val q3 = Tabs.groupBy(_.col1).map {
+      case (name, group) => (name, group.map(_.col2).concat)
+    }
+    assertEquals(Set(("baz", Some("quux")), ("foo", Some("bar,bar,quux"))), q3.run.toSet)
+    
   }
 
   def testMultiMapAggregates {

@@ -140,6 +140,7 @@ final class SingleColumnQueryExtensionMethods[B1, P1](val q: Query[Column[P1], _
   def max(implicit tm: OptionTM) = Library.Max.column[Option[B1]](q.toNode)
   def avg(implicit tm: OptionTM) = Library.Avg.column[Option[B1]](q.toNode)
   def sum(implicit tm: OptionTM) = Library.Sum.column[Option[B1]](q.toNode)
+  def concat(implicit tm: OptionTM) = Library.StringAgg.column[Option[B1]](q.toNode)
 }
 
 trait ExtensionMethodConversions {
