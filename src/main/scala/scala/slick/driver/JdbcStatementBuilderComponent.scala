@@ -334,7 +334,6 @@ trait JdbcStatementBuilderComponent { driver: JdbcDriver =>
         if(supportsCast) b"cast(${ch(0)} as $tn)"
         else b"{fn convert(!${ch(0)},$tn)}"
       case Library.SilentCast(ch) => b"$ch"
-      case Library.Repeat(n, times) => b"\(repeat($n, $times)\)"
       case s: SimpleBinaryOperator => b"\(${s.left} ${s.name} ${s.right}\)"
       case Apply(sym: Library.SqlOperator, ch) =>
         b"\("
