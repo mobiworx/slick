@@ -85,6 +85,8 @@ object RelationalProfile {
     val typeLong = Capability("relational.typeLong")
     /** Supports zip, zipWith and zipWithIndex */
     val zip = Capability("relational.zip")
+    /** Has a String aggregation function */
+    val mkString = Capability("relational.mkString")    
 
     /** Supports all RelationalProfile features which do not have separate capability values */
     val other = Capability("relational.other")
@@ -93,7 +95,7 @@ object RelationalProfile {
     val all = Set(other, columnDefaults, foreignKeyActions, functionDatabase,
       functionUser, joinFull, joinRight, likeEscape, pagingDrop, pagingNested,
       pagingPreciseTake, setByteArrayNull, typeBigDecimal, typeBlob, typeLong,
-      zip)
+      zip, mkString)
   }
 }
 

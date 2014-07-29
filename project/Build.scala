@@ -51,8 +51,8 @@ object SlickBuild extends Build {
   }
 
   lazy val sharedSettings = Seq(
-    version := "2.0.2",
-    organizationName := "Typesafe",
+    version := "2.0.3",
+    organizationName := "Mobiworx",
     organization := "com.typesafe.slick",
     resolvers += Resolver.sonatypeRepo("snapshots"),
     scalacOptions ++= List("-deprecation", "-feature"),
