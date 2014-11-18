@@ -1,7 +1,7 @@
 package com.typesafe.slick.testkit.tests
 
 import org.junit.Assert._
-import com.typesafe.slick.testkit.util.{RelationalTestDB, TestkitTest}
+import com.typesafe.slick.testkit.util.{ RelationalTestDB, TestkitTest }
 
 class AggregateTest extends TestkitTest[RelationalTestDB] {
   import tdb.profile.simple._
@@ -91,9 +91,9 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
     val r4 = q4.run
     val r4t = r4: Seq[((Int, Option[Int]), Int)]
     println(r4)
-    assertEquals(Vector( ((1,Some(1)),1), ((1,Some(2)),1), ((1,Some(3)),1),
-      ((2,Some(1)),1), ((2,Some(2)),1), ((2,Some(5)),1),
-      ((3,Some(1)),1), ((3,Some(9)),1)), r4)
+    assertEquals(Vector(((1, Some(1)), 1), ((1, Some(2)), 1), ((1, Some(3)), 1),
+      ((2, Some(1)), 1), ((2, Some(2)), 1), ((2, Some(5)), 1),
+      ((3, Some(1)), 1), ((3, Some(9)), 1)), r4)
 
     println("=========================================================== q5")
     val q5 = ts
@@ -114,8 +114,9 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
     assertEquals(Set((1, 3, 3, 3), (2, 3, 3, 3), (3, 2, 2, 2), (4, 1, 1, 0)), q6.run.toSet)
 
     println("=========================================================== q7")
-    val q7 = ts.groupBy(_.a).map { case (a, ts) =>
-      (a, ts.map(_.b).sum, ts.map(_.b).min, ts.map(_.b).max, ts.map(_.b).avg)
+    val q7 = ts.groupBy(_.a).map {
+      case (a, ts) =>
+        (a, ts.map(_.b).sum, ts.map(_.b).min, ts.map(_.b).max, ts.map(_.b).avg)
     }
     assertEquals(Set(
       (1, Some(6), Some(1), Some(3), Some(2)),
@@ -123,21 +124,20 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
       (3, Some(10), Some(1), Some(9), Some(5))), q7.run.toSet)
 
     println("=========================================================== q8")
-    val q8 = us.map( _ => "test").groupBy(x => x).map(_._2.max)
+    val q8 = us.map(_ => "test").groupBy(x => x).map(_._2.max)
     assertEquals((Seq(Some("test"))), q8.run)
-    val q8b = for( (key, group) <- us.map(_ => "x").groupBy(co => co) )
-    yield (key, group.map(co => co).max )
+    val q8b = for ((key, group) <- us.map(_ => "x").groupBy(co => co))
+      yield (key, group.map(co => co).max)
     assertEquals((Seq(("x", Some("x")))), q8b.run)
-    val q8c = for( (key, group) <- us.map(_ => 5).groupBy(co => co) )
-    yield (key, group.map(co => co + co).sum )
+    val q8c = for ((key, group) <- us.map(_ => 5).groupBy(co => co))
+      yield (key, group.map(co => co + co).sum)
     assertEquals((Seq((5, Some(40)))), q8c.run)
 
     println("=========================================================== q9")
     val res9 = Set(
       (1, Some(1)), (1, Some(2)), (1, Some(3)),
       (2, Some(1)), (2, Some(2)), (2, Some(5)),
-      (3, Some(1)), (3, Some(9))
-    )
+      (3, Some(1)), (3, Some(9)))
     val q9 = ts.groupBy(x => x).map(_._1)
     assertEquals(res9, q9.run.toSet)
     val q9b = ts.map(x => x).groupBy(_.*).map(_._1)
@@ -151,13 +151,13 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
     } yield m) groupBy (_.a) map {
       case (id, data) => (id, data.map(_.b.asColumnOf[Option[Double]]).max)
     }
-    assertEquals(Set((2,Some(5.0)), (1,Some(3.0)), (3,Some(9.0))), q10.run.toSet)
+    assertEquals(Set((2, Some(5.0)), (1, Some(3.0)), (3, Some(9.0))), q10.run.toSet)
 
-    case class Pair(a:Int,b:Option[Int])
+    case class Pair(a: Int, b: Option[Int])
     class T4(tag: Tag) extends Table[Pair](tag, "t4") {
       def a = column[Int]("a")
       def b = column[Option[Int]]("b")
-      def * = (a, b) <> (Pair.tupled,Pair.unapply)
+      def * = (a, b) <> (Pair.tupled, Pair.unapply)
     }
     val t4s = TableQuery[T4]
     t4s.ddl.create
@@ -167,8 +167,7 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
 
     println("=========================================================== q11")
     val expected11 = Set(
-      Pair(1, Some(1)), Pair(1, Some(2))
-    )
+      Pair(1, Some(1)), Pair(1, Some(2)))
     val q12 = t4s
     val res12 = q12.run
     assertEquals(6, res12.size)
@@ -214,26 +213,33 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
 
     Tabs.ddl.create
     Tabs ++= Seq(
-      Tab("foo", "bar",  "bat", 1, 5),
-      Tab("foo", "bar",  "bat", 2, 6),
+      Tab("foo", "bar", "bat", 1, 5),
+      Tab("foo", "bar", "bat", 2, 6),
       Tab("foo", "quux", "bat", 3, 7),
-      Tab("baz", "quux", "bat", 4, 8)
-    )
+      Tab("baz", "quux", "bat", 4, 8))
 
     val q1 = Tabs.groupBy(t => (t.col1, t.col2, t.col3)).map {
       case (grp, t) => (grp._1, grp._2, t.map(_.col4).sum)
     }
-    assertEquals(Set(("baz","quux",Some(4)), ("foo","quux",Some(3)), ("foo","bar",Some(3))), q1.run.toSet)
+    assertEquals(Set(("baz", "quux", Some(4)), ("foo", "quux", Some(3)), ("foo", "bar", Some(3))), q1.run.toSet)
 
     val q2 = Tabs.groupBy(t => ((t.col1, t.col2), t.col3)).map {
       case (grp, t) => (grp._1._1, grp._1._2, t.map(_.col4).sum)
     }
-    assertEquals(Set(("baz","quux",Some(4)), ("foo","quux",Some(3)), ("foo","bar",Some(3))), q2.run.toSet)
+    assertEquals(Set(("baz", "quux", Some(4)), ("foo", "quux", Some(3)), ("foo", "bar", Some(3))), q2.run.toSet)
 
     val q3 = Tabs.groupBy(_.col1).map {
       case (grp, t) => (grp, t.map(x => x.col4 + x.col5).sum)
     }
-    assertEquals(Set(("baz",Some(12)), ("foo",Some(24))), q3.run.toSet)
+    assertEquals(Set(("baz", Some(12)), ("foo", Some(24))), q3.run.toSet)
+
+    ifCap(rcap.mkString) {
+      assertEquals("bar,bar,quux,quux", Tabs.map(_.col2).mkString(";").run)
+      val q4 = Tabs.groupBy(_.col1).map {
+        case (name, group) => (name, group.map(_.col2).mkString(","))
+      }
+      assertEquals(Set(("baz", "quux"), ("foo", "bar,bar,quux")), q4.run.toSet)
+    }
   }
 
   def testMultiMapAggregates {
@@ -259,9 +265,10 @@ class AggregateTest extends TestkitTest[RelationalTestDB] {
     assert(q1.run.toList.isEmpty)
 
     val q2 =
-      (as leftJoin bs on (_.id === _.id)).map { case (c, s) =>
-        val name = s.b
-        (c, s, name)
+      (as leftJoin bs on (_.id === _.id)).map {
+        case (c, s) =>
+          val name = s.b
+          (c, s, name)
       }.groupBy { prop =>
         val c = prop._1
         val s = prop._2

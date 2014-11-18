@@ -12,7 +12,7 @@ import com.typesafe.sbt.sdlc.Plugin._
 
 object SlickBuild extends Build {
 
-  val slickVersion = "2.1.0"
+  val slickVersion = "2.1.0.1"
   val binaryCompatSlickVersion = "2.1.0" // Slick base version for binary compatibility checks
   val scalaVersions = Seq("2.10.4", "2.11.1")
 
@@ -87,7 +87,7 @@ object SlickBuild extends Build {
 
   lazy val sharedSettings = Seq(
     version := slickVersion,
-    organizationName := "Typesafe",
+    organizationName := "Mobiworx",
     organization := "com.typesafe.slick",
     resolvers += Resolver.sonatypeRepo("snapshots"),
     scalacOptions ++= List("-deprecation", "-feature"),
